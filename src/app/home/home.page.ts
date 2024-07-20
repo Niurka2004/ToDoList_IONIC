@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { PokemonService } from './../pokemon.service';
+import { Component, OnInit } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 
 @Component({
@@ -6,13 +7,26 @@ import { Storage } from '@ionic/storage-angular';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   newTodo: string = '';
   todos: string[] = [];
 
-  constructor(private storage: Storage) {
+  pokemonlist: any[] = [];
+
+  constructor(
+    private storage: Storage,
+    private pokemonService: PokemonService
+  ) {
     this.storage.create();
     this.getItem();
+  }
+
+
+  ngOnInit() {
+    this.pokemonService.getpokemonlist().subscribe((data) => {
+      this.pokemonlist = data.results;
+      console.log('LISTA POKEMONES:', this.pokemonlist)
+    });
   }
 
   setItem() {
